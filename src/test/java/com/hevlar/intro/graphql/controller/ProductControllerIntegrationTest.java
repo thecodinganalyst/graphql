@@ -11,6 +11,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -56,5 +57,32 @@ class ProductControllerIntegrationTest {
         assertThat(product.getDescription()).isEqualTo("Gel-based ball point pen");
         assertThat(product.getPrice()).isEqualTo(BigDecimal.valueOf(1.50));
         assertThat(product.getCategory()).isEqualTo("Stationery");
+    }
+
+    @Test
+    @Order(2)
+    void getAllProducts(){
+        List<Product> productList = this.httpGraphQlTester
+                .document("""
+                        query {
+                            getAllProducts {
+                                id
+                                name
+                                description
+                                price
+                            }
+                        }
+                        """)
+                .execute()
+                .errors()
+                .verify()
+                .path("getAllProducts")
+                .entityList(Product.class)
+                .get();
+        assertThat(productList.size()).isEqualTo(1);
+        Product product = productList.get(0);
+        assertThat(product.getName()).isEqualTo("Pilot Pen");
+        assertThat(product.getDescription()).isEqualTo("Gel-based ball point pen");
+        assertThat(product.getPrice()).isEqualTo(BigDecimal.valueOf(1.50));
     }
 }
