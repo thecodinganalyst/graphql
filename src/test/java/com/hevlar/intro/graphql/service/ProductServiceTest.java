@@ -29,11 +29,38 @@ class ProductServiceTest {
         Product product = new Product(
                 "Pilot Pen",
                 "Gel-based ball point pen",
-                BigDecimal.valueOf(10.00),
+                BigDecimal.valueOf(1.50),
                 "Stationery");
         given(productRepository.save(any())).willReturn(Mono.just(product));
         StepVerifier.create(productService.createProduct(product))
                 .expectNext(product)
                 .verifyComplete();
+    }
+
+    @Test
+    void updateProduct() {
+        Product product = new Product(
+                "Pilot G1 Pen",
+                "Best selling gel-based ball point pen",
+                BigDecimal.valueOf(1.80),
+                "Stationery");
+        given(productRepository.findById("1")).willReturn(Mono.just(product));
+        given(productRepository.save(any())).willReturn(Mono.just(product));
+        StepVerifier.create(productService.updateProduct("1", product))
+                .expectNext(product)
+                .verifyComplete();
+    }
+
+    @Test
+    void updateProduct_throwWhenProductNotFound() {
+        Product product = new Product(
+                "Pilot G1 Pen",
+                "Best selling gel-based ball point pen",
+                BigDecimal.valueOf(1.80),
+                "Stationery");
+        given(productRepository.findById("1")).willReturn(Mono.empty());
+        StepVerifier.create(productService.updateProduct("1", product))
+                .expectErrorMessage("Product not found")
+                .verify();
     }
 }

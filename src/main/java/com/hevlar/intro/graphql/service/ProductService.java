@@ -26,4 +26,16 @@ public class ProductService {
     public Mono<Product> getProduct(@Argument String id){
         return productRepository.findById(id);
     }
+
+    public Mono<Product> updateProduct(@Argument String id, @Argument Product updatedProduct){
+        return productRepository.findById(id)
+                .switchIfEmpty(Mono.error(new IllegalArgumentException("Product not found")))
+                .flatMap(product -> {
+                    product.setName(updatedProduct.getName());
+                    product.setDescription(updatedProduct.getDescription());
+                    product.setPrice(updatedProduct.getPrice());
+                    product.setCategory(updatedProduct.getCategory());
+                    return productRepository.save(product);
+                });
+    }
 }

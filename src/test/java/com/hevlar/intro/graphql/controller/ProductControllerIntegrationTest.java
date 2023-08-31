@@ -12,6 +12,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -116,4 +117,69 @@ class ProductControllerIntegrationTest {
         assertThat(product.getPrice()).isEqualTo(BigDecimal.valueOf(1.50));
         assertThat(product.getCategory()).isEqualTo("Stationery");
     }
+
+    @Test
+    @Order(4)
+    void updateProduct(){
+        String query = String.format("""
+                mutation {
+                    updateProduct(
+                        id: "%s",
+                        updatedProduct: {
+                            name: "Pilot G1 Pen",
+                            description: "Best selling gel-based ball point pen",
+                            price: 1.80
+                            category: "Stationery"
+                        }
+                    ){
+                        id
+                        name
+                        description
+                        price
+                        category
+                    }
+                }
+                """, savedProduct.getId());
+        Product product = this.httpGraphQlTester
+                .document(query)
+                .execute()
+                .errors()
+                .verify()
+                .path("updateProduct")
+                .entity(Product.class)
+                .get();
+        assertThat(product.getName()).isEqualTo("Pilot G1 Pen");
+        assertThat(product.getDescription()).isEqualTo("Best selling gel-based ball point pen");
+        assertThat(product.getPrice()).isEqualTo(BigDecimal.valueOf(1.80));
+        assertThat(product.getCategory()).isEqualTo("Stationery");
+    }
+
+    @Test
+    void updateProduct_invalidProduct(){
+        this.httpGraphQlTester
+                .document("""
+                        mutation {
+                            updateProduct(
+                                id: "123",
+                                updatedProduct: {
+                                    name: "Pilot G1 Pen",
+                                    description: "Best selling gel-based ball point pen",
+                                    price: 1.80
+                                    category: "Stationery"
+                                }
+                            ){
+                                id
+                                name
+                                description
+                                price
+                                category
+                            }
+                        }
+                        """)
+                .execute()
+                .errors()
+                .expect(error -> Objects.equals(error.getMessage(), "Product not found"));
+    }
+
+
 }
