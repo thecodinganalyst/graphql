@@ -33,6 +33,9 @@ dependencies {
     testImplementation 'org.springframework.graphql:spring-graphql-test'
     testImplementation 'org.testcontainers:junit-jupiter'
     testImplementation 'org.testcontainers:mongodb'
+
+    implementation 'ch.qos.logback:logback-classic:1.4.8'
+    implementation 'org.slf4j:slf4j-api:2.0.7'
 }
 
 tasks.named('test') {

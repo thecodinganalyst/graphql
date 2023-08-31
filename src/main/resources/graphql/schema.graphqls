@@ -1,0 +1,38 @@
+# schema.graphqls
+
+# Define the Product type
+type Product {
+    id: ID!
+    name: String!
+    description: String
+    price: Float!
+    category: String!
+}
+
+# Define the Query type for Read operations
+type Query {
+    # Get a single product by ID
+    getProduct(id: ID!): Product
+
+    # Get all products (optionally by category)
+    getAllProducts: [Product]
+}
+
+input ProductInput {
+    name: String!
+    description: String
+    price: Float!
+    category: String!
+}
+
+# Define the Mutation type for Create, Update, and Delete operations
+type Mutation {
+    # Create a new product
+    createProduct(product: ProductInput!): Product
+
+    # Update an existing product
+    updateProduct(id: ID!, updatedProduct: ProductInput!): Product
+
+    # Delete a product
+    deleteProduct(id: ID!): Boolean
+}
