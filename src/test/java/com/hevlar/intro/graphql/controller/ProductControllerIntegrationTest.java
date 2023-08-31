@@ -155,6 +155,7 @@ class ProductControllerIntegrationTest {
     }
 
     @Test
+    @Order(5)
     void updateProduct_invalidProduct(){
         this.httpGraphQlTester
                 .document("""
@@ -175,6 +176,35 @@ class ProductControllerIntegrationTest {
                                 category
                             }
                         }
+                        """)
+                .execute()
+                .errors()
+                .expect(error -> Objects.equals(error.getMessage(), "Product not found"));
+    }
+
+    @Test
+    @Order(6)
+    void deleteProduct(){
+        String mutation = String.format("""
+                    mutation {
+                        deleteProduct(id: "%s")
+                    }
+                """, savedProduct.getId());
+        this.httpGraphQlTester
+                .document(mutation)
+                .execute()
+                .errors()
+                .verify();
+    }
+
+    @Test
+    @Order(7)
+    void deleteProduct_invalidProduct(){
+        this.httpGraphQlTester
+                .document("""
+                            mutation {
+                                deleteProduct(id: "123")
+                            }
                         """)
                 .execute()
                 .errors()

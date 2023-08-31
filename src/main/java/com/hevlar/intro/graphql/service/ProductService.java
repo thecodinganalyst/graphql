@@ -37,4 +37,10 @@ public class ProductService {
                     return productRepository.save(product);
                 });
     }
+
+    public Mono<Boolean> deleteProduct(String id){
+        return productRepository.findById(id)
+                .switchIfEmpty(Mono.error(new IllegalArgumentException("Product not found")))
+                .flatMap(product -> productRepository.deleteById(id).thenReturn(true));
+    }
 }

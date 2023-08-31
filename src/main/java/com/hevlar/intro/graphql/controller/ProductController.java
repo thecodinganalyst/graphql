@@ -40,4 +40,9 @@ public class ProductController {
     public Mono<Product> updateProduct(@Argument String id, @Argument Product updatedProduct){
         return productService.updateProduct(id, updatedProduct);
     }
+
+    @MutationMapping
+    public Mono<Boolean> deleteProduct(@Argument String id){
+        return productService.deleteProduct(id);
+    }
 }

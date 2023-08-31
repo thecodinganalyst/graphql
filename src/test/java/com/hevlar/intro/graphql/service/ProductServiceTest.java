@@ -63,4 +63,26 @@ class ProductServiceTest {
                 .expectErrorMessage("Product not found")
                 .verify();
     }
+
+    @Test
+    void deleteProduct(){
+        Product product = new Product(
+                "Pilot G1 Pen",
+                "Best selling gel-based ball point pen",
+                BigDecimal.valueOf(1.80),
+                "Stationery");
+        given(productRepository.findById("1")).willReturn(Mono.just(product));
+        given(productRepository.deleteById("1")).willReturn(Mono.empty());
+        StepVerifier.create(productService.deleteProduct("1"))
+                .expectNext(true)
+                .verifyComplete();
+    }
+
+    @Test
+    void deleteProduct_throwWhenProductNotFound(){
+        given(productRepository.findById("1")).willReturn(Mono.empty());
+        StepVerifier.create(productService.deleteProduct("1"))
+                .expectErrorMessage("Product not found")
+                .verify();
+    }
 }
