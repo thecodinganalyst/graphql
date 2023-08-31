@@ -26,6 +26,8 @@ class ProductControllerIntegrationTest {
     @Autowired
     HttpGraphQlTester httpGraphQlTester;
 
+    Product savedProduct;
+
     @Test
     @Order(1)
     void createProduct() {
@@ -57,6 +59,7 @@ class ProductControllerIntegrationTest {
         assertThat(product.getDescription()).isEqualTo("Gel-based ball point pen");
         assertThat(product.getPrice()).isEqualTo(BigDecimal.valueOf(1.50));
         assertThat(product.getCategory()).isEqualTo("Stationery");
+        savedProduct = product;
     }
 
     @Test
@@ -84,5 +87,33 @@ class ProductControllerIntegrationTest {
         assertThat(product.getName()).isEqualTo("Pilot Pen");
         assertThat(product.getDescription()).isEqualTo("Gel-based ball point pen");
         assertThat(product.getPrice()).isEqualTo(BigDecimal.valueOf(1.50));
+    }
+
+    @Test
+    @Order(3)
+    void getProduct(){
+        String query = String.format("""
+                query {
+                    getProduct(id: "%s"){
+                        id
+                        name
+                        description
+                        price
+                        category
+                    }
+                }
+                """, savedProduct.getId());
+        Product product = this.httpGraphQlTester
+                .document(query)
+                .execute()
+                .errors()
+                .verify()
+                .path("getProduct")
+                .entity(Product.class)
+                .get();
+        assertThat(product.getName()).isEqualTo("Pilot Pen");
+        assertThat(product.getDescription()).isEqualTo("Gel-based ball point pen");
+        assertThat(product.getPrice()).isEqualTo(BigDecimal.valueOf(1.50));
+        assertThat(product.getCategory()).isEqualTo("Stationery");
     }
 }

@@ -30,4 +30,9 @@ public class ProductController {
     public Flux<Product> getAllProducts(){
         return productService.getAllProducts();
     }
+
+    @QueryMapping
+    public Mono<Product> getProduct(@Argument String id){
+        return productService.getProduct(id);
+    }
 }
