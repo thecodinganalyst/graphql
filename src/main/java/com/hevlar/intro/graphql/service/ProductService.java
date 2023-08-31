@@ -2,7 +2,6 @@ package com.hevlar.intro.graphql.service;
 
 import com.hevlar.intro.graphql.model.Product;
 import com.hevlar.intro.graphql.repository.ProductRepository;
-import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -23,11 +22,11 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public Mono<Product> getProduct(@Argument String id){
+    public Mono<Product> getProduct(String id){
         return productRepository.findById(id);
     }
 
-    public Mono<Product> updateProduct(@Argument String id, @Argument Product updatedProduct){
+    public Mono<Product> updateProduct(String id, Product updatedProduct){
         return productRepository.findById(id)
                 .switchIfEmpty(Mono.error(new IllegalArgumentException("Product not found")))
                 .flatMap(product -> {
