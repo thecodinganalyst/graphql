@@ -1,11 +1,10 @@
 package com.hevlar.intro.graphql.controller;
 
-import com.hevlar.intro.graphql.MongoDBTestContainerConfig;
+import com.hevlar.intro.graphql.TestIntroGraphQlApplication;
 import com.hevlar.intro.graphql.model.Product;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.graphql.test.tester.HttpGraphQlTester;
 import org.springframework.test.context.ContextConfiguration;
@@ -16,12 +15,11 @@ import java.math.BigDecimal;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-@AutoConfigureWebTestClient
 @AutoConfigureHttpGraphQlTester
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Testcontainers
-@ContextConfiguration(classes = MongoDBTestContainerConfig.class)
+@ContextConfiguration(classes = TestIntroGraphQlApplication.class)
 class ProductControllerIntegrationTest {
 
     @Autowired

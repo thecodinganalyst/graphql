@@ -1,5 +1,6 @@
 package com.hevlar.intro.graphql.repository;
 
+import com.hevlar.intro.graphql.TestIntroGraphQlApplication;
 import com.hevlar.intro.graphql.model.Product;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ import java.math.BigDecimal;
 
 @DataMongoTest
 @Testcontainers
-@ContextConfiguration(classes = {ReactiveMongoTestConfiguration.class})
+@ContextConfiguration(classes = {TestIntroGraphQlApplication.class})
 class ProductRepositoryTest {
     @Autowired
     ProductRepository productRepository;
